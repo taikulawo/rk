@@ -1,0 +1,10 @@
+[package]
+name = "rk"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = "4.5.8"
+openssl = "0.10.64"
+rustls = "0.23.10"
+tokio = { version = "1.38.0", features = ["full"] }

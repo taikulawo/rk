@@ -1,26 +1,33 @@
 use clap::{arg, value_parser, Command};
+use rk::basic_command;
 
 pub fn tls_subcommand() -> Command {
-    return Command::new("tls")
+    return basic_command("tls")
         .about("benchmark tls handshake only")
         .arg(
             arg!(
-                -c --connections "Connections to keep open"
+                -c --connections <connections>  "Connections to keep open"
             )
-            // We don't have syntax yet for optional options, so manually calling `required`
             .required(true)
             .value_parser(value_parser!(usize)),
         )
         .arg(
             arg!(
-                -d --duration "Duration of test"
+                -t --threads <thread>  "Number of threads to use"
+            )
+            .required(true)
+            .value_parser(value_parser!(usize)),
+        )
+        .arg(
+            arg!(
+                -d --duration <duration> "Duration of test"
             )
             .value_parser(value_parser!(String)),
         )
         .override_usage("rk [OPTIONS] [url] [COMMAND]")
         .arg(
             arg!(
-                -H --header "Add header to request"
+                -H --header <headers> "Add header to request"
             )
             .value_parser(value_parser!(String)),
         )
@@ -32,7 +39,7 @@ pub fn tls_subcommand() -> Command {
         )
         .arg(
             arg!(
-                --timeout "Socket/request timeout"
+                --timeout <timeout> "Socket/request timeout"
             )
             .value_parser(value_parser!(String)),
         );

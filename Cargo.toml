@@ -12,9 +12,8 @@ license = false
 eula = false
 [dependencies]
 clap = { version = "4.5.8", features = ["cargo", "string"] }
-native-tls = "0.2.12"
-openssl = "0.10.64"
 tokio = { version = "1.38.0", features = ["full"] }
+tokio-native-tls = { version = "0.3.1", features = ["vendored"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
@@ -32,6 +31,6 @@ targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-
 # CI backends to support
 ci = "github"
 # Publish jobs to run in CI
-pr-run-mode = "plan"
+pr-run-mode = "upload"
 # Whether to install an updater program
 install-updater = false

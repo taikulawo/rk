@@ -24,7 +24,6 @@ pub fn tls_subcommand() -> Command {
             )
             .value_parser(value_parser!(String)),
         )
-        .override_usage("rk [OPTIONS] [url] [COMMAND]")
         .arg(
             arg!(
                 -H --header <headers> "Add header to request"

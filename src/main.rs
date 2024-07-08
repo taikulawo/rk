@@ -1,8 +1,9 @@
-use h1::root_subcommand;
+use h1::{do_h1, root_subcommand, H1Config};
 use h2::h2_subcommand;
 use h3::h3_subcommand;
 use tcp::tcp_subcommand;
 use tls::tls_subcommand;
+use url::Url;
 static VERSION: &str = env!("CARGO_PKG_VERSION");
 mod h1;
 mod h2;
@@ -20,12 +21,19 @@ fn main() {
         .subcommand(h3_subcommand())
         .get_matches();
     match matches.subcommand() {
-        Some(("h2", sub)) => {}
-        Some(("h3", sub)) => {}
-        Some(("tcp", sub)) => {}
-        Some(("tls", sub)) => {}
+        Some(("h2", matches)) => {}
+        Some(("h3", matches)) => {}
+        Some(("tcp", matches)) => {}
+        Some(("tls", matches)) => {
+            let target: &String = matches.get_one("url").unwrap();
+            let target = Url::parse(target).expect("should correct url");
+        }
         _ => {
             // h1
+            let target: &String = matches.get_one("url").unwrap();
+            let target = Url::parse(target).expect("should correct url");
+            let c = H1Config { url: target };
+            do_h1(c);
         }
     }
     // Continued program logic goes here...

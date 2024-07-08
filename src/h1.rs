@@ -1,12 +1,14 @@
 use clap::{arg, value_parser, Command};
 use rk::basic_command;
+use url::Url;
 static NAME: &'static str = env!("CARGO_PKG_NAME");
 pub fn root_subcommand() -> Command {
     return basic_command(NAME)
+        .subcommand_negates_reqs(true)
+        .subcommand_required(false)
         .about(
-            "By default we benchmark using HTTP/1.1(works like wrk).\nOr you can use Commands to benchmark other protocols.",
+            "By default we benchmark url using HTTP/1.1(works like wrk).\nOr you can use Commands to benchmark other protocol.",
         )
-        
         .arg(
             arg!(
                 -c --connections <connections>  "Connections to keep open"
@@ -25,7 +27,6 @@ pub fn root_subcommand() -> Command {
             )
             .value_parser(value_parser!(String)),
         )
-        .override_usage("rk [OPTIONS] [url] [COMMAND]")
         .arg(
             arg!(
                 -H --header <headers> "Add header to request"
@@ -45,3 +46,9 @@ pub fn root_subcommand() -> Command {
             .value_parser(value_parser!(String)),
         );
 }
+
+pub struct H1Config {
+    pub url: Url,
+}
+
+pub fn do_h1(c: H1Config) {}

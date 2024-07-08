@@ -12,9 +12,8 @@ license = false
 eula = false
 [dependencies]
 clap = { version = "4.5.8", features = ["cargo", "string"] }
-native-tls = "0.2.12"
-openssl = "0.10.64"
 tokio = { version = "1.38.0", features = ["full"] }
+tokio-native-tls = "0.3.1"
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
@@ -28,7 +27,13 @@ cargo-dist-version = "0.18.0"
 # The installers to generate for each app
 installers = ["shell", "powershell", "msi"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-unknown-linux-musl", "x86_64-pc-windows-msvc"]
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-unknown-linux-musl",
+    "x86_64-pc-windows-msvc",
+]
 # CI backends to support
 ci = "github"
 # Publish jobs to run in CI

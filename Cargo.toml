@@ -2,9 +2,36 @@
 name = "rk"
 version = "0.1.0"
 edition = "2021"
-
+repository = "https://github.com/takulawo/rk"
+authors = ["wuweichao"]
+description = "benchmark tool for multiple protocol"
+[package.metadata.wix]
+upgrade-guid = "4BF71C7A-DE57-4D85-9178-FFF27BA0B93A"
+path-guid = "9727148A-0440-43C2-9C3E-0DBB929D8A88"
+license = false
+eula = false
 [dependencies]
 clap = { version = "4.5.8", features = ["cargo", "string"] }
 native-tls = "0.2.12"
 openssl = "0.10.64"
 tokio = { version = "1.38.0", features = ["full"] }
+
+# The profile that 'cargo dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+# Config for 'cargo dist'
+[workspace.metadata.dist]
+# The preferred cargo-dist version to use in CI (Cargo.toml SemVer syntax)
+cargo-dist-version = "0.18.0"
+# The installers to generate for each app
+installers = ["shell", "powershell", "msi"]
+# Target platforms to build apps for (Rust target-triple syntax)
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+# CI backends to support
+ci = "github"
+# Publish jobs to run in CI
+pr-run-mode = "plan"
+# Whether to install an updater program
+install-updater = false

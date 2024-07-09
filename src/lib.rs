@@ -1,7 +1,9 @@
 use core::fmt;
-use std::fmt::Display;
+use std::{fmt::Display, io};
 
+use async_trait::async_trait;
 use clap::{arg, value_parser, Command};
+use tokio::io::{AsyncRead, AsyncWrite};
 use url::Url;
 
 pub fn basic_command(name: &str) -> Command {
@@ -10,7 +12,24 @@ pub fn basic_command(name: &str) -> Command {
         .arg(arg!(<url>).value_parser(value_parser!(Url)).required(true));
 }
 
-struct Error {}
+pub trait IO: AsyncRead + AsyncWrite + Send + Sync + Unpin + 'static {}
+impl<T> IO for T where T: AsyncRead + AsyncWrite + Send + Sync + Unpin + 'static {}
+pub type Stream = Box<dyn IO>;
+
+#[async_trait]
+pub trait ProtocolConnector: Send + Sync {
+    async fn connect(&self) -> io::Result<Stream>;
+}
+
+struct NopConnector {}
+
+#[async_trait]
+impl ProtocolConnector for NopConnector {
+    async fn connect(&self) -> io::Result<Stream> {
+        todo!()
+    }
+}
+pub struct Error {}
 
 impl std::error::Error for Error {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
@@ -38,4 +57,4 @@ impl fmt::Debug for Error {
     }
 }
 
-type Result<T> = ::core::result::Result<T, Error>;
+pub type Result<T> = ::core::result::Result<T, Error>;

@@ -1,5 +1,8 @@
-use clap::{arg, value_parser, Command};
-use rk::basic_command;
+use std::io;
+
+use async_trait::async_trait;
+use clap::{arg, value_parser, ArgMatches, Command};
+use rk::{basic_command, ProtocolConnector, Stream};
 
 pub fn tls_subcommand() -> Command {
     return basic_command("tls")
@@ -68,4 +71,38 @@ pub fn tls_subcommand() -> Command {
             )
             .value_parser(value_parser!(String)),
         );
+}
+#[derive(Clone)]
+pub struct TlsConfig {
+
+}
+
+pub struct TlsConnector<T> {
+    config: TlsConfig,
+    inner: T
+}
+impl<T> TlsConnector<T> 
+where
+    T: ProtocolConnector
+{
+    pub fn new(inner: T, c: &TlsConfig) -> Self {
+        Self {
+            config: c.clone(),
+            inner,
+        }
+    }
+}
+
+#[async_trait]
+impl<T> ProtocolConnector for TlsConnector<T> 
+where
+    T: ProtocolConnector
+{
+    async fn connect(&self) -> io::Result<Stream> {
+        todo!()
+    }
+}
+
+pub fn parse_tls_config(m: &ArgMatches) -> rk::Result<TlsConfig>{
+    todo!()
 }

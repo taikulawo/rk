@@ -11,6 +11,8 @@ path-guid = "9727148A-0440-43C2-9C3E-0DBB929D8A88"
 license = false
 eula = false
 [dependencies]
+anyhow = "1.0.86"
+async-trait = "0.1.81"
 clap = { version = "4.5.8", features = ["cargo", "string"] }
 tokio = { version = "1.38.0", features = ["full"] }
 tokio-native-tls = { version = "0.3.1", features = ["vendored"] }

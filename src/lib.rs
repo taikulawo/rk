@@ -1,8 +1,8 @@
 use core::fmt;
-use std::{fmt::Display, io};
+use std::{collections::HashMap, fmt::Display, io};
 
 use async_trait::async_trait;
-use clap::{arg, value_parser, Command};
+use clap::{arg, value_parser, ArgMatches, Command};
 use tokio::io::{AsyncRead, AsyncWrite};
 use url::Url;
 
@@ -20,7 +20,19 @@ pub type Stream = Box<dyn IO>;
 pub trait ProtocolConnector: Send + Sync {
     async fn connect(&self) -> io::Result<Stream>;
 }
-
+pub fn parse_http_header(m: &ArgMatches) -> HashMap<String, String> {
+    let mut headers = HashMap::new();
+    let values: Vec<&String> = match m.get_many("headers") {
+        Some(v) => v.collect(),
+        None => Vec::new(),
+    };
+    for v in values {
+        let s: Vec<&str> = v.splitn(1, ":").collect();
+        assert_eq!(s.len(), 2);
+        headers.insert(s[0].to_string(), s[1].to_string());
+    }
+    headers
+}
 struct NopConnector {}
 
 #[async_trait]

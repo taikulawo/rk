@@ -1,9 +1,9 @@
-use std::io;
+use std::{collections::HashMap, io};
 
 use anyhow::bail;
 use async_trait::async_trait;
 use clap::{arg, value_parser, ArgMatches, Command};
-use rk::{basic_command, ProtocolConnector, Stream};
+use rk::{basic_command, parse_http_header, ProtocolConnector, Stream};
 use url::Url;
 
 use crate::{
@@ -38,7 +38,7 @@ pub fn root_subcommand() -> Command {
         )
         .arg(
             arg!(
-                -H --header <headers> "Add header to request"
+                headers: -H --header <headers> "Add header to request"
             )
             .value_parser(value_parser!(String)),
         )
@@ -58,6 +58,7 @@ pub fn root_subcommand() -> Command {
 #[derive(Clone)]
 pub struct H1Config {
     pub url: Url,
+    pub headers: HashMap<String, String>,
     pub tls_config: TlsConfig,
     pub tcp_config: TcpConfig,
 }
@@ -84,10 +85,12 @@ fn parse_h1_config(m: &ArgMatches) -> anyhow::Result<H1Config> {
     let tls_config = parse_tls_config(&m)?;
     let tcp_config = parse_tcp_config(&m)?;
     let target: &Url = m.get_one("url").unwrap();
+    let headers = parse_http_header(m);
     let c = H1Config {
         url: target.clone(),
         tcp_config,
         tls_config,
+        headers,
     };
     Ok(c)
 }

@@ -1,13 +1,13 @@
 use core::fmt;
 use std::fmt::Display;
 
-use clap::{arg, Command};
+use clap::{arg, value_parser, Command};
 use url::Url;
 
 pub fn basic_command(name: &str) -> Command {
     return Command::new(name.to_string())
         .arg_required_else_help(true)
-        .arg(arg!(<url>).required(true));
+        .arg(arg!(<url>).value_parser(value_parser!(Url)).required(true));
 }
 
 struct Error {}

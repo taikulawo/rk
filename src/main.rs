@@ -30,9 +30,10 @@ fn main() {
         }
         _ => {
             // h1
-            let target: &String = matches.get_one("url").unwrap();
-            let target = Url::parse(target).expect("should correct url");
-            let c = H1Config { url: target };
+            let target: &Url = matches.get_one("url").unwrap();
+            let c = H1Config {
+                url: target.clone(),
+            };
             do_h1(c);
         }
     }

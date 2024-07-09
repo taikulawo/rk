@@ -6,10 +6,36 @@ pub fn tls_subcommand() -> Command {
         .about("benchmark tls handshake only")
         .arg(
             arg!(
+                --cipher <cipher> "like: ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
+            )
+            .value_parser(value_parser!(String)),
+        )
+        .arg(
+            arg!(
+                --"tls-version" "like: tlsv1.2;tlsv1.3"
+            )
+            .value_parser(value_parser!(String)),
+        )
+        .arg(
+            arg!(
+                --"session-ticket" "Default: true. Enable session-ticket or not."
+            ).default_value("true")
+            .value_parser(value_parser!(bool)),
+        )
+        .arg(
+            arg!(
                 -c --connections <connections>  "Connections to keep open"
             )
             .required(true)
             .value_parser(value_parser!(usize)),
+            
+        )
+        .arg(
+            arg!(
+                --handshake "Only benchmark tls handshake. connection will close after handshake complete"
+            )
+            .default_value("false")
+            .value_parser(value_parser!(bool)),
         )
         .arg(
             arg!(

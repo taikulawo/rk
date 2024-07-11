@@ -13,6 +13,7 @@ fn main() {
     // By default, we use h1 as top command, let rk act like wrk
     let matches = root_subcommand()
         .subcommand_negates_reqs(true)
+        .disable_help_subcommand(true)
         .version(VERSION)
         .subcommand(h2_subcommand())
         .subcommand(tls_subcommand())

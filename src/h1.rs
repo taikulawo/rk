@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io};
+use std::{collections::HashMap, io, sync::Arc};
 
 use anyhow::bail;
 use async_trait::async_trait;
@@ -97,17 +97,17 @@ fn parse_h1_config(m: &ArgMatches) -> anyhow::Result<H1Config> {
 
 pub fn do_h1(m: &ArgMatches) -> anyhow::Result<()> {
     let c = parse_h1_config(m)?;
-    let connector: Box<dyn ProtocolConnector> = match c.url.scheme() {
+    let connector: Arc<dyn ProtocolConnector> = match c.url.scheme() {
         "http" => {
             let h1 = Http1Connector::new(&c);
             let tcp_connector = TcpConnector::new(h1, &c.tcp_config);
-            Box::new(tcp_connector)
+            Arc::new(tcp_connector)
         }
         "https" => {
             let h1 = Http1Connector::new(&c);
             let tls = TlsConnector::new(h1, &c.tls_config);
             let tcp = TcpConnector::new(tls, &c.tcp_config);
-            Box::new(tcp)
+            Arc::new(tcp)
         }
         scheme => bail!("unknown scheme for http1 connector {scheme}"),
     };

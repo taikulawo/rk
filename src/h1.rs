@@ -7,9 +7,13 @@ use crate::{
 use anyhow::bail;
 use async_trait::async_trait;
 use clap::{arg, value_parser, ArgMatches, Command};
+use http_body_util::Full;
 use hyper::{
-    body::Body,
-    client::conn::{http1::SendRequest, http2::handshake},
+    body::{Body, Bytes},
+    client::conn::{
+        http1::{Builder, SendRequest},
+        http2::handshake,
+    },
 };
 use hyper_util::rt::TokioIo;
 use rk::{basic_command, parse_http_header, ProtocolConnector, Stream, IO};
@@ -70,15 +74,18 @@ pub struct H1Config {
 struct Http1Connector<T> {
     config: H1Config,
     inner: T,
+    builder: Builder,
 }
 
 impl<T> Http1Connector<T> {}
 
 impl<T> Http1Connector<T> {
     pub fn new(inner: T, c: &H1Config) -> Self {
+        let mut b = hyper::client::conn::http1::Builder::new();
         Self {
             config: c.clone(),
             inner,
+            builder: b,
         }
     }
 }
@@ -89,12 +96,18 @@ where
     T: ProtocolConnector<Connection = Stream>,
 {
     type Connection = Http1Connection;
-    async fn connect(&self) -> io::Result<Self::Connection> {
+    async fn connect(&self) -> anyhow::Result<Self::Connection> {
         let s = self.inner.connect().await?;
         let stream = TokioIo::new(s);
+        let (sender, conn) = self.builder.handshake(stream).await?;
+        tokio::spawn(async move {
+            if let Err(err) = conn.await {
+                log::debug!("err {err:?}");
+            }
+        });
         let stream = Http1Connection {
             url: self.config.url.clone(),
-            stream,
+            sender,
         };
         Ok(stream)
     }
@@ -141,16 +154,14 @@ pub enum HttpProtocol {
 }
 struct Http1Connection {
     url: Url,
-    stream: TokioIo<Stream>,
+    sender: SendRequest<Full<Bytes>>,
 }
 
 impl Http1Connection {
-    pub fn new(url: Url, stream: Stream) -> Self {
-        let stream = TokioIo::new(stream);
-        Self { url, stream }
+    pub fn new(url: Url, sender: SendRequest<Full<Bytes>>) -> Self {
+        Self { url, sender }
     }
     pub async fn send_req(&mut self) -> anyhow::Result<()> {
-        let mut b = hyper::client::conn::http1::Builder::new();
         todo!()
         // b.handshake(&mut self.stream)
         // handshake(exec, io)

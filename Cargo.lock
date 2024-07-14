@@ -677,6 +677,7 @@ dependencies = [
  "http-body-util",
  "hyper",
  "hyper-util",
+ "log",
  "tokio",
  "tokio-native-tls",
  "url",

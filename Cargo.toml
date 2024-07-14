@@ -18,6 +18,7 @@ http = "1.1.0"
 http-body-util = "0.1.2"
 hyper = { version = "1.4.1", features = ["http1", "http2", "client"] }
 hyper-util = { version = "0.1.6", features = ["client", "http1", "http2", "tokio"] }
+log = "0.4.22"
 tokio = { version = "1.38.0", features = ["full"] }
 tokio-native-tls = { version = "0.3.1", features = ["vendored"] }
 url = "2.5.2"

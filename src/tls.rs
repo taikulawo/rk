@@ -99,7 +99,7 @@ where
     T: ProtocolConnector
 {
     type Connection = Stream;
-    async fn connect(&self) -> io::Result<Self::Connection> {
+    async fn connect(&self) -> anyhow::Result<Self::Connection> {
         todo!()
     }
 }

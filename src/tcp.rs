@@ -63,7 +63,7 @@ impl TcpConnector {
 #[async_trait]
 impl ProtocolConnector for TcpConnector {
     type Connection = Stream;
-    async fn connect(&self) -> io::Result<Self::Connection> {
+    async fn connect(&self) -> anyhow::Result<Self::Connection> {
         todo!()
     }
 }

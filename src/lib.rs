@@ -19,7 +19,7 @@ pub type Stream = Box<dyn IO>;
 #[async_trait]
 pub trait ProtocolConnector: Send + Sync {
     type Connection;
-    async fn connect(&self) -> io::Result<Self::Connection>;
+    async fn connect(&self) -> anyhow::Result<Self::Connection>;
 }
 pub fn parse_http_header(m: &ArgMatches) -> HashMap<String, String> {
     let mut headers = HashMap::new();
@@ -39,7 +39,7 @@ struct NopConnector {}
 #[async_trait]
 impl ProtocolConnector for NopConnector {
     type Connection = ();
-    async fn connect(&self) -> io::Result<Self::Connection> {
+    async fn connect(&self) -> anyhow::Result<Self::Connection> {
         todo!()
     }
 }

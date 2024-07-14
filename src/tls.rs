@@ -98,9 +98,14 @@ impl<T> ProtocolConnector for TlsConnector<T>
 where
     T: ProtocolConnector
 {
-    async fn connect(&self) -> io::Result<Stream> {
+    type Connection = Stream;
+    async fn connect(&self) -> io::Result<Self::Connection> {
         todo!()
     }
+}
+
+pub struct TlsConnection {
+
 }
 
 pub fn parse_tls_config(m: &ArgMatches) -> rk::Result<TlsConfig>{

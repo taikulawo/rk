@@ -3,6 +3,7 @@ use std::io;
 use async_trait::async_trait;
 use clap::{arg, value_parser, ArgMatches, Command};
 use rk::{basic_command, ProtocolConnector, Stream};
+use tokio::net::TcpStream;
 
 pub fn tcp_subcommand() -> Command {
     return basic_command("tcp")
@@ -50,28 +51,23 @@ pub fn tcp_subcommand() -> Command {
 #[derive(Clone)]
 pub struct TcpConfig {}
 
-pub struct TcpConnector<T> {
+pub struct TcpConnector {
     config: TcpConfig,
-    inner: T,
 }
-impl<T> TcpConnector<T> {
-    pub fn new(inner: T, c: &TcpConfig) -> Self {
-        Self {
-            config: c.clone(),
-            inner,
-        }
+impl TcpConnector {
+    pub fn new(c: &TcpConfig) -> Self {
+        Self { config: c.clone() }
     }
 }
 
 #[async_trait]
-impl<T> ProtocolConnector for TcpConnector<T>
-where
-    T: ProtocolConnector,
-{
-    async fn connect(&self) -> io::Result<Stream> {
+impl ProtocolConnector for TcpConnector {
+    type Connection = Stream;
+    async fn connect(&self) -> io::Result<Self::Connection> {
         todo!()
     }
 }
+
 pub fn parse_tcp_config(m: &ArgMatches) -> rk::Result<TcpConfig> {
     todo!()
 }

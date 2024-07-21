@@ -27,31 +27,10 @@ pub fn tls_subcommand() -> Command {
         )
         .arg(
             arg!(
-                -c --connections <connections>  "Connections to keep open"
-            )
-            .required(true)
-            .value_parser(value_parser!(usize)),
-            
-        )
-        .arg(
-            arg!(
                 --handshake "Only benchmark tls handshake. connection will close after handshake complete"
             )
             .default_value("false")
             .value_parser(value_parser!(bool)),
-        )
-        .arg(
-            arg!(
-                -t --threads <thread>  "Number of threads to use"
-            )
-            .required(true)
-            .value_parser(value_parser!(usize)),
-        )
-        .arg(
-            arg!(
-                -d --duration <duration> "Duration of test"
-            )
-            .value_parser(value_parser!(String)),
         )
         .arg(
             arg!(
@@ -73,17 +52,15 @@ pub fn tls_subcommand() -> Command {
         );
 }
 #[derive(Clone)]
-pub struct TlsConfig {
-
-}
+pub struct TlsConfig {}
 
 pub struct TlsConnector<T> {
     config: TlsConfig,
-    inner: T
+    inner: T,
 }
-impl<T> TlsConnector<T> 
+impl<T> TlsConnector<T>
 where
-    T: ProtocolConnector
+    T: ProtocolConnector,
 {
     pub fn new(inner: T, c: &TlsConfig) -> Self {
         Self {
@@ -94,9 +71,9 @@ where
 }
 
 #[async_trait]
-impl<T> ProtocolConnector for TlsConnector<T> 
+impl<T> ProtocolConnector for TlsConnector<T>
 where
-    T: ProtocolConnector
+    T: ProtocolConnector,
 {
     type Connection = Stream;
     async fn connect(&self) -> anyhow::Result<Self::Connection> {
@@ -104,10 +81,8 @@ where
     }
 }
 
-pub struct TlsConnection {
+pub struct TlsConnection {}
 
-}
-
-pub fn parse_tls_config(m: &ArgMatches) -> rk::Result<TlsConfig>{
+pub fn parse_tls_config(m: &ArgMatches) -> rk::Result<TlsConfig> {
     todo!()
 }

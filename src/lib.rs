@@ -9,7 +9,27 @@ pub static NAME: &'static str = env!("CARGO_PKG_NAME");
 pub fn basic_command(name: &str) -> Command {
     return Command::new(name.to_string())
         .arg_required_else_help(true)
-        .arg(arg!(<url>).value_parser(value_parser!(Url)).required(true));
+        .arg(arg!(<url>).value_parser(value_parser!(Url)).required(true))
+        .arg(
+            arg!(
+                conn:-c --connections <connections>  "Connections to keep open"
+            )
+            .required(true)
+            .value_parser(value_parser!(usize)),
+        )
+        .arg(
+            arg!(
+                thread:-t --threads <thread>  "Number of threads to use"
+            )
+            .required(true)
+            .value_parser(value_parser!(usize)),
+        )
+        .arg(
+            arg!(
+                duration:-d --duration <duration> "Duration of test"
+            )
+            .value_parser(value_parser!(String)),
+        );
 }
 
 pub trait IO: AsyncRead + AsyncWrite + Send + Sync + Unpin + 'static {}

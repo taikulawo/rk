@@ -14,26 +14,6 @@ pub fn h2_subcommand() -> Command {
         .about("benchmark h2")
         .arg(
             arg!(
-                -c --connections <connections>  "Connections to keep open"
-            )
-            .required(true)
-            .value_parser(value_parser!(usize)),
-        )
-        .arg(
-            arg!(
-                -t --threads <thread>  "Number of threads to use"
-            )
-            .required(true)
-            .value_parser(value_parser!(usize)),
-        )
-        .arg(
-            arg!(
-                -d --duration <duration> "Duration of test"
-            )
-            .value_parser(value_parser!(String)),
-        )
-        .arg(
-            arg!(
                 -H --header <headers> "Add header to request"
             )
             .value_parser(value_parser!(String)),

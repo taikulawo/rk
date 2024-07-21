@@ -5,7 +5,7 @@ use async_trait::async_trait;
 use clap::{arg, value_parser, ArgMatches, Command};
 use tokio::io::{AsyncRead, AsyncWrite};
 use url::Url;
-
+pub static NAME: &'static str = env!("CARGO_PKG_NAME");
 pub fn basic_command(name: &str) -> Command {
     return Command::new(name.to_string())
         .arg_required_else_help(true)

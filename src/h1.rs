@@ -16,10 +16,10 @@ use hyper::{
     },
 };
 use hyper_util::rt::TokioIo;
-use rk::{basic_command, parse_http_header, ProtocolConnector, Stream, IO};
+use rk::{basic_command, parse_http_header, ProtocolConnector, Stream, IO, NAME};
 use tokio::net::TcpStream;
 use url::Url;
-static NAME: &'static str = env!("CARGO_PKG_NAME");
+
 pub fn root_subcommand() -> Command {
     return basic_command(NAME)
         .subcommand_negates_reqs(true)

@@ -8,7 +8,6 @@ use tokio::net::TcpStream;
 pub fn tcp_subcommand() -> Command {
     return basic_command("tcp")
         .about("benchmark tcp accept")
-        
         .arg(
             arg!(
                 -H --header <headers> "Add header to request"

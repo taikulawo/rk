@@ -10,9 +10,7 @@ use clap::{arg, value_parser, ArgMatches, Command};
 use http_body_util::Full;
 use hyper::{
     body::Bytes,
-    client::conn::{
-        http1::{Builder, SendRequest}
-    },
+    client::conn::http1::{Builder, SendRequest},
 };
 use hyper_util::rt::TokioIo;
 use rk::{basic_command, parse_http_header, ProtocolConnector, Stream, IO, NAME};
@@ -25,7 +23,6 @@ pub fn root_subcommand() -> Command {
         .about(
             "By default we benchmark url using HTTP/1.1(works like wrk).\nOr you can use Commands to benchmark other protocol.",
         )
-        
         .arg(
             arg!(
                 headers: -H --header <headers> "Add header to request"
@@ -110,9 +107,9 @@ fn parse_h1_config(m: &ArgMatches) -> anyhow::Result<H1Config> {
 
 pub fn do_h1(m: &ArgMatches) -> anyhow::Result<()> {
     let c = parse_h1_config(m)?;
-    let connections:&usize = m.get_one("conn").expect("required");
-    let thread:&usize = m.get_one("thread").expect("required");
-    let duration:&String = m.get_one("duration").expect("required");
+    let connections: &usize = m.get_one("conn").expect("required");
+    let thread: &usize = m.get_one("thread").expect("required");
+    let duration: &String = m.get_one("duration").expect("required");
     let connector: Arc<dyn ProtocolConnector<Connection = Http1Connection>> = match c.url.scheme() {
         "http" => {
             let tcp_connector = TcpConnector::new(&c.tcp_config);
